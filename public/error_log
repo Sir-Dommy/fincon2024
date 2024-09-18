@@ -1,0 +1,1 @@
+[16-Jun-2024 20:18:53 UTC] PHP Fatal error:  Class 'App\Http\Controllers\Admin\Controller' not found in /home/zdhdyrvx/fincon2024.co.ke/fincon2024/app/Http/Controllers/Admin/RegistrationController.php on line 15
