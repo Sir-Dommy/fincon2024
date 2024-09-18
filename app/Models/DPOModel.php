@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Http;
@@ -8,14 +8,14 @@ use Illuminate\Support\Facades\Http;
 class DPOModel extends Model
 {
     //lets create request data first
-    public static function createPaymentToken($transcode){
+    public static function createPaymentToken($transcode, $amount){
         $xml_data = '<?xml version="1.0" encoding="utf-8"?>
             <API3G>
             <CompanyToken>'.env('DPO_COMPANY_TOKEN', null).'</CompanyToken>
             <Request>createToken</Request>
             <Transaction>
-                <PaymentAmount>1.00</PaymentAmount>
-                <PaymentCurrency>KES</PaymentCurrency>
+                <PaymentAmount>'. $amount .'</PaymentAmount>
+                <PaymentCurrency>USD</PaymentCurrency>
                 <CompanyRef>'.env('DPO_COMPANY_REF', null).'</CompanyRef>
                 <RedirectURL>http://www.domain.com/payurl.php</RedirectURL>
                 <BackURL>http://www.domain.com/backurl.php</BackURL>
@@ -32,16 +32,34 @@ class DPOModel extends Model
             </API3G>
         ';
         $response = DPOModel::makeThePostRequest($xml_data);
-        DPOModel::sirLogging($response);
+        DPOModel::sirLogging(json_encode($response, true));
 
         // $payment_token = $response['response']['TransToken'] ?? null;
-        $payment_token = $response['response']['TransToken'] ?? null;
+        $payment_token = $response['TransToken'] ?? null;
 
         if($payment_token == null){
             return DPOModel::sirLogging("WAH HAKUNA PAYMENT TOKEN!!!!!!!");
         }
+        else{
+            return $payment_token;
+        }
+
+        DPOModel::sirLogging($response['TransToken'] ." NA AMOUNT NI ".$amount);
 
         $response2 = DPOModel::verifyPaymentToken($payment_token);
+
+        $payment_status = $payment_token = $response2['ResultExplanation'] ?? null;
+
+        DPOModel::sirLogging(json_encode("PAYMENT STATUS NI: ".$payment_status, true));
+
+        if($payment_status == "Transaction Paid"){
+            echo "SENOR!!!!!!!!!!!!";
+        }
+        else{
+            echo "PAYMENT STATUS NI :::::::: ".$payment_status;
+        }
+
+        return DPOModel::sirLogging("TOKEN IMEKUWA VERFIED::::::");
 
         return $response2;
 
@@ -88,7 +106,7 @@ class DPOModel extends Model
             // Output the cURL error
             $errorMessage = curl_error($ch);
             curl_close($ch);
-            return response()->json(['error' => 'cURL Error: ' . $errorMessage], 500);
+            return $errorMessage;
         }
 
         // Close the cURL session
@@ -102,10 +120,11 @@ class DPOModel extends Model
             $responseArray = json_decode(json_encode($xmlObject), true);
 
             // Return the response as a JSON object
-            return response()->json(['response' => $responseArray], 200);
+            // return response()->json(['response' => $responseArray], 200);
+            return  $responseArray;
         } catch (\Exception $e) {
             // Handle the case where the XML is invalid or cannot be parsed
-            return response()->json(['error' => 'Invalid XML Response', 'message' => $e->getMessage()], 500);
+            return $e->getMessage();
         }
     }
 

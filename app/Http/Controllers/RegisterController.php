@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\DPOModel;
 use Auth;
 use App\Models\Order;
 use App\Models\User;
@@ -10,6 +9,7 @@ use App\Models\OrderItem;
 use App\Models\OrderTicketDetail;
 use App\Models\BankUpload;
 use App\Http\Requests;
+use App\Models\DPOModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
@@ -112,7 +112,19 @@ class RegisterController extends Controller
         }elseif($request->paymode == 'dpo') {
             //request dpo token for payment
             $this->sirLogging("TUKO HAPA ACHA TUREQUEST DPO API");
-            echo DPOModel::createPaymentToken($transcode);
+
+            $payment_token = DPOModel::createPaymentToken($transcode, $request->price);
+            
+            if($payment_token != null){
+                $this->sirLogging("WE ARE REDIRECTING TO PAYMENT PAGE>>>>>>".$payment_token);
+                return redirect()->away('https://secure.3gdirectpay.com/dpopayment.php?ID='.$payment_token);
+            }
+            else{
+                $this->sirLogging("WE ARE UNABLE TO GENERATE PAYMENT TOKEN");
+                return redirect()->back()->with('error', 'We are unable to generate payment token at the moment please retry');
+            }
+
+            
             
             // return redirect()->back()->with('success', 'WE ARE SURE IT IS DPO!!!!!!!');
         }
