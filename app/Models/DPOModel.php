@@ -98,6 +98,33 @@ class DPOModel extends Model
         }
     }
 
+    public static function checkTransactionStatus($payment_token){
+        $response = DPOModel::verifyPaymentToken($payment_token);
+
+        // Updating db
+        $status = $response['ResultExplanation'] ?? null;
+
+        // update transaction to complete if its already paid
+        if($status == "Transaction Paid"){
+
+            // Update order to complete
+            Order::where('dpo_code', $payment_token)
+                ->update(['status' => 'complete']);
+
+            return 1;
+        }
+
+        elseif($status == null){
+            DPOModel::sirLogging("ERROR QUERING TRANSACTION FROM DPO :::::: ". json_encode($response));
+        }
+
+        // "Transaction not paid yet" use this to veiry if transaction is not yet paid
+        
+        DPOModel::sirLogging("NOT YET PAID!!!!! :::::: ". $status);
+
+        return $response;
+    }
+
     // Test logging can be removed after testing --> SIR-DOMMY
     public static function sirLogging($message){
         $path = storage_path('logs/sir.log');

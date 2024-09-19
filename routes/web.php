@@ -1,9 +1,13 @@
 <?php
 
 use App\Http\Controllers\RegisterController;
+use App\Models\DPOModel;
+use App\Models\Order;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 /*
 |--------------------------------------------------------------------------
@@ -125,6 +129,57 @@ Route::group(array('middleware' => ['auth:web']), function () {
 });
 
 
+Route::prefix('/backoffice')->name('admin.')->namespace('Admin')->group(function(){
+
+    //Login Routes
+    Route::get('/login','LoginController@showLoginForm')->name('login');
+    Route::post('/login','LoginController@login')->name('authenticate');
+    Route::post('/logout','LoginController@logout')->name('logout');
+
+    Route::group(array('middleware' => ['auth:admin']), function () {
+
+        Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+        
+        Route::resource('users', 'UserController');
+        
+        Route::get('delegates/{status}', 'DelegateController@index')->name('delegates');
+        
+        Route::resource('orders', 'OrderController');
+        
+        Route::resource('categories', 'CategoryController');
+        Route::resource('eventtypes', 'EventTypeController');
+        Route::resource('locations', 'LocationController');
+        Route::resource('venues', 'VenueController');
+        Route::resource('organizers', 'OrganizerController');
+        Route::resource('events', 'EventController');
+
+        Route::resource('tickets', 'TicketController');
+        Route::resource('speakers', 'SpeakerController');
+        Route::resource('agendas', 'AgendaController');
+        Route::resource('partners', 'PartnerController');
+        Route::resource('exhibitors', 'ExhibitorController');
+        
+        Route::resource('messaging', 'MessageController');
+        
+        Route::resource('venuerooms', 'VenueRoomController');
+        
+        Route::post('registration/manage', 'RegistrationController@manage')->name('registration.manage');
+        Route::post('registration/ordermanage', 'RegistrationController@ordermanage')->name('order.manage');
+        
+
+        Route::resource('posts', 'PostController');
+        Route::resource('tags', 'TagController');
+        Route::resource('groups', 'GroupController');
+        Route::post('post-tags/{post_id}', 'PostTagController@store')->name('posttags.store');
+        Route::post('posttags/{tag_id}', 'PostTagController@remove')->name('posttag.remove');
+        Route::post('group-posts/{post_id}', 'GroupPostController@store')->name('groupposts.store');
+        Route::post('groupposts/{group_id}', 'GroupPostController@remove')->name('groupposts.remove');
+
+    });
+
+});
+
+
 
 
 // NOTE :: Both generating payment token and redirecting to dpo for payment are done explicitly during registration
@@ -142,5 +197,47 @@ Route::post('dpo/updateDPOstatus', [RegisterController::class, 'bulkConfirmDPOTr
 
 
 Route::post('dpo/callback', [RegisterController::class, 'dpoCallback']);
+
+
+Route::post('dpo/startasync', [RegisterController::class, 'startAsyncProcess']);
+
+
+Route::get('/run-background-task', function () {
+    DPOModel::sirLogging("json_encode(ll)");
+    $endDate = Carbon::parse('2024-09-30 23:59:59'); // Replace with your actual end date
+
+    if (Carbon::now()->lt($endDate)) {
+
+        $all = Order::whereNotNull('dpo_code')
+        // $all = Order::whereNull('dpo_code')
+        ->where('status', '!=', 'complete')
+        ->get();
+
+        DPOModel::sirLogging(json_encode($all)); 
+
+        $count = 0;
+        $failed = 0;
+        foreach($all as $transaction){
+            $status = DPOModel::checkTransactionStatus($transaction->dpo_code);
+
+            if($status == 1){
+                $count +=1;
+            }
+            else{
+                $failed +=1;
+            }
+        }
+
+        // return response()->json([
+        //     "newly_paid"=> $count,
+        //     "not_paid_yet"=>$failed
+        // ]);
+
+        // Trigger the task again after a delay (e.g., 10 seconds)
+        Http::get(url('/run-background-task?delay=10')); // Self-calling the route
+    }
+    
+    return response()->json(['status' => 'Task executed']);
+});
 
 // });

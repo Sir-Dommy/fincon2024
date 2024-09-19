@@ -9,12 +9,15 @@ use App\Models\OrderItem;
 use App\Models\OrderTicketDetail;
 use App\Models\BankUpload;
 use App\Http\Requests;
+use App\Jobs\CheckDOPStatus;
 use App\Models\DPOModel;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
 class RegisterController extends Controller
@@ -108,7 +111,7 @@ class RegisterController extends Controller
 
 
             DPOModel::sirLogging("TRANSACTION COMMITTED");
-        }
+        } 
 
         catch(\Exception $e){
             DPOModel::sirLogging("KUNA ERROR MANZEEE!!!! :::: ". json_encode($e));
@@ -268,7 +271,7 @@ class RegisterController extends Controller
         $count = 0;
         $failed = 0;
         foreach($all as $transaction){
-            $status = $this->checkTransactionStatus($transaction->dpo_code);
+            $status = DPOModel::checkTransactionStatus($transaction->dpo_code);
 
             if($status == 1){
                 $count +=1;
@@ -317,6 +320,18 @@ class RegisterController extends Controller
 
         
     }
+
+    public function startAsyncProcess()
+    {
+        // Define the end date until which the task should run
+        $endDate = Carbon::now()->addMinutes(5); // Example: run for 5 minutes
+
+        // Dispatch the job
+        CheckDOPStatus::dispatch($endDate);
+
+        return response()->json(['message' => 'Asynchronous process started']);
+    }
+
     
     
 }
