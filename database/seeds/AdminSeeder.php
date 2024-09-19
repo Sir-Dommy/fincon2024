@@ -13,9 +13,25 @@ class AdminSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('admins')->insert([
+        DB::table('admins')->insertOrIgnore([
 	        'name' => 'Super Admin',
 	        'email' => 'admin@miceafrica.org',
+	        'password' => Hash::make('admin123'),
+	        'updated_at'    => date("Y-m-d H:m:i"),
+	        'created_at'	=> date("Y-m-d H:m:i")
+      	]);
+
+          DB::table('users')->insertOrIgnore([
+	        'name' => 'Super Admin',
+	        'email' => 'admin@miceafrica.org',
+	        'password' => Hash::make('admin123'),
+	        'updated_at'    => date("Y-m-d H:m:i"),
+	        'created_at'	=> date("Y-m-d H:m:i")
+      	]);
+
+          DB::table('users')->insertOrIgnore([
+	        'name' => 'Super Admin',
+	        'email' => 'support@fincon2024.co.ke',
 	        'password' => Hash::make('admin123'),
 	        'updated_at'    => date("Y-m-d H:m:i"),
 	        'created_at'	=> date("Y-m-d H:m:i")

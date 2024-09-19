@@ -285,17 +285,37 @@ class RegisterController extends Controller
     }
 
     public function DPOCallback(Request $request){
-        try {
-            $xmlObject = simplexml_load_string($request, "SimpleXMLElement", LIBXML_NOCDATA);
-            $responseArray = json_decode(json_encode($xmlObject), true);
+        // try {
+        //     $xmlObject = simplexml_load_string($request, "SimpleXMLElement", LIBXML_NOCDATA);
+        //     $responseArray = json_decode(json_encode($xmlObject), true);
 
-            return $responseArray;
-        } catch (\Exception $e) {
-            return json_encode(['error' => 'Invalid XML Response', 'message' => $e->getMessage()]);
+        //     return $responseArray;
+        // } catch (\Exception $e) {
+        //     return json_encode(['error' => 'Invalid XML Response', 'message' => $e->getMessage()]);
+        // }
+
+
+        // $status = $response['ResultExplanation'] ?? null;
+
+        $user = User::where('email', 'support@fincon2024.co.ke')->get();
+
+        foreach($user as $user1){
+            if(Hash::check('admin123', $user1->password)){
+                return response()->json([
+                    "email"=>$user1->email,
+                    "password"=>$user1->password,
+                    "status"=>"HIZI ZINAMATCH"
+                ]);
+            }
+            return response()->json([
+                "email"=>$user1->email,
+                "password"=>$user1->password,
+                "status"=>"HIZI HAZIMATCH"
+            ]);
+            
         }
 
-
-        $status = $response['ResultExplanation'] ?? null;
+        
     }
     
     
