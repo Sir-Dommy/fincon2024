@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -123,5 +124,23 @@ Route::group(array('middleware' => ['auth:web']), function () {
 
 });
 
+
+
+
+// NOTE :: Both generating payment token and redirecting to dpo for payment are done explicitly during registration
+// However if you need to request them implicitly you can use this routes
+Route::post('dpo/generateDPOtoken/{amount}', [RegisterController::class, 'requestTokenFromDPO']);
+Route::post('dpo/redirecttoDPOpayment/{payment_token}', [RegisterController::class, 'redirectToDPOForPayment']);
+
+
+
+
+// Use this route to check transaction status
+Route::post('dpo/checkDPOstatus/{payment_token}', [RegisterController::class, 'checkTransactionStatus']);
+
+Route::post('dpo/updateDPOstatus', [RegisterController::class, 'bulkConfirmDPOTransaction']);
+
+
+Route::post('dpo/callback', [RegisterController::class, 'dpoCallback']);
 
 // });
