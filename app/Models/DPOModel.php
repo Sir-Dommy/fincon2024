@@ -34,34 +34,16 @@ class DPOModel extends Model
         $response = DPOModel::makeThePostRequest($xml_data);
         DPOModel::sirLogging(json_encode($response, true));
 
+        // // $payment_token = $response['response']['TransToken'] ?? null;
         // $payment_token = $response['response']['TransToken'] ?? null;
-        $payment_token = $response['TransToken'] ?? null;
 
-        if($payment_token == null){
-            return DPOModel::sirLogging("WAH HAKUNA PAYMENT TOKEN!!!!!!!");
-        }
-        else{
-            return $payment_token;
-        }
+        // if($payment_token == null){
+        //     return DPOModel::sirLogging("WAH HAKUNA PAYMENT TOKEN!!!!!!!");
+        // }
 
-        DPOModel::sirLogging($response['TransToken'] ." NA AMOUNT NI ".$amount);
+        // $response2 = DPOModel::verifyPaymentToken($payment_token);
 
-        $response2 = DPOModel::verifyPaymentToken($payment_token);
-
-        $payment_status = $payment_token = $response2['ResultExplanation'] ?? null;
-
-        DPOModel::sirLogging(json_encode("PAYMENT STATUS NI: ".$payment_status, true));
-
-        if($payment_status == "Transaction Paid"){
-            echo "SENOR!!!!!!!!!!!!";
-        }
-        else{
-            echo "PAYMENT STATUS NI :::::::: ".$payment_status;
-        }
-
-        return DPOModel::sirLogging("TOKEN IMEKUWA VERFIED::::::");
-
-        return $response2;
+        return $response;
 
     }
 
@@ -106,7 +88,7 @@ class DPOModel extends Model
             // Output the cURL error
             $errorMessage = curl_error($ch);
             curl_close($ch);
-            return $errorMessage;
+            return json_encode(['error' => 'cURL Error: ' . $errorMessage]);
         }
 
         // Close the cURL session
@@ -120,11 +102,10 @@ class DPOModel extends Model
             $responseArray = json_decode(json_encode($xmlObject), true);
 
             // Return the response as a JSON object
-            // return response()->json(['response' => $responseArray], 200);
-            return  $responseArray;
+            return $responseArray;
         } catch (\Exception $e) {
             // Handle the case where the XML is invalid or cannot be parsed
-            return $e->getMessage();
+            return json_encode(['error' => 'Invalid XML Response', 'message' => $e->getMessage()]);
         }
     }
 

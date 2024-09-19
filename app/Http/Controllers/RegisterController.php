@@ -170,7 +170,7 @@ class RegisterController extends Controller
         return redirect()->route('order.success');
     }
 
-    public function requestTokenFroDPO(){
+    public function requestTokenFromDPO(){
 
     }
     private function sirLogging($message){
