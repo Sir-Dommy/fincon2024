@@ -281,9 +281,7 @@ class RegisterController extends Controller
             }
         }
 
-        return redirect()->back()->with('success', 'Newly Paid DPO tickets: '.$count. ' Not yet paid: '. $failed);
-        
-
+        return redirect()->back()->with('success', 'Original number of DPO unpaid: '.count($all).' Newly paid: '.$count.' Not yet paid: '.$failed);
         // return response()->json([
         //     "newly_paid"=> $count,
         //     "not_paid_yet"=>$failed
@@ -322,17 +320,6 @@ class RegisterController extends Controller
         }
 
         
-    }
-
-    public function startAsyncProcess()
-    {
-        // Define the end date until which the task should run
-        $endDate = Carbon::now()->addMinutes(5); // Example: run for 5 minutes
-
-        // Dispatch the job
-        CheckDOPStatus::dispatch($endDate);
-
-        return response()->json(['message' => 'Asynchronous process started']);
     }
 
     

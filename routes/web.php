@@ -199,45 +199,8 @@ Route::get('dpo/updateDPOstatus', [RegisterController::class, 'bulkConfirmDPOTra
 Route::post('dpo/callback', [RegisterController::class, 'dpoCallback']);
 
 
-Route::post('dpo/startasync', [RegisterController::class, 'startAsyncProcess']);
 
 
-Route::get('/run-background-task', function () {
-    DPOModel::sirLogging("json_encode(ll)");
-    $endDate = Carbon::parse('2024-09-30 23:59:59'); // Replace with your actual end date
 
-    if (Carbon::now()->lt($endDate)) {
-
-        $all = Order::whereNotNull('dpo_code')
-        // $all = Order::whereNull('dpo_code')
-        ->where('status', '!=', 'complete')
-        ->get();
-
-        DPOModel::sirLogging(json_encode($all)); 
-
-        $count = 0;
-        $failed = 0;
-        foreach($all as $transaction){
-            $status = DPOModel::checkTransactionStatus($transaction->dpo_code);
-
-            if($status == 1){
-                $count +=1;
-            }
-            else{
-                $failed +=1;
-            }
-        }
-
-        // return response()->json([
-        //     "newly_paid"=> $count,
-        //     "not_paid_yet"=>$failed
-        // ]);
-
-        // Trigger the task again after a delay (e.g., 10 seconds)
-        Http::get(url('/run-background-task?delay=10')); // Self-calling the route
-    }
-    
-    return response()->json(['status' => 'Task executed']);
-});
 
 // });

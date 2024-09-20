@@ -9,9 +9,9 @@
                 <div class="card-header d-flex justify-content-between">
                     <h4>Ticket Orders</h4>
 
-                    <div class="row">
-                        <div>
-                            <a class="btn btn-success" href="{{ url('dpo/updateDPOstatus') }}">Reload Ticket Payments</a>
+                    <div class="d-flex justify-content-end">
+                        <div class="">
+                            <a class="btn btn-primary" href="{{ url('dpo/updateDPOstatus') }}">Refresh DPO Payments</a>
                         </div>
                         <div class="dropdown mx-2">
                             <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">

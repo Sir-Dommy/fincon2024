@@ -14,8 +14,8 @@ class DPOModel extends Model
             <CompanyToken>'.env('DPO_COMPANY_TOKEN', null).'</CompanyToken>
             <Request>createToken</Request>
             <Transaction>
+                <PaymentAmount>1</PaymentAmount>
                 <PaymentAmount>'. $amount .'</PaymentAmount>
-                <PaymentCurrency>USD</PaymentCurrency>
                 <CompanyRef>'.env('DPO_COMPANY_REF', null).'</CompanyRef>
                 <RedirectURL>'.env('DPO_REDIRECT_URL', null).'</RedirectURL>
                 <BackURL>'.env('DPO_BACK_URL', null).'</BackURL>

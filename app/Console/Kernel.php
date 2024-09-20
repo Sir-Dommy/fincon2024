@@ -28,12 +28,6 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
 
-        // Schedule the job to dispatch regularly, for example every minute
-        $schedule->call(function () {
-            $end_date = Carbon::now()->addDays(10); // Run for the next 10 minutes
-            CheckDOPStatus::dispatch($end_date);
-            
-        })->everyMinute();
     }
 
     /**
