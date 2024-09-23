@@ -15,7 +15,7 @@ class DPOModel extends Model
             <Request>createToken</Request>
             <Transaction>
                 <PaymentAmount>1</PaymentAmount>
-                <PaymentCurrency>KES</PaymentCurrency>
+                <PaymentCurrency>USD</PaymentCurrency>
                 <CompanyRef>'.env('DPO_COMPANY_REF', null).'</CompanyRef>
                 <RedirectURL>http://www.domain.com/payurl.php</RedirectURL>
                 <BackURL>http://www.domain.com/backurl.php</BackURL>
