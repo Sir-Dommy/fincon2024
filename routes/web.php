@@ -193,7 +193,7 @@ Route::post('dpo/redirecttoDPOpayment/{payment_token}', [RegisterController::cla
 // Use this route to check transaction status
 Route::post('dpo/checkDPOstatus/{payment_token}', [RegisterController::class, 'checkTransactionStatus']);
 
-Route::post('dpo/updateDPOstatus', [RegisterController::class, 'bulkConfirmDPOTransaction']);
+Route::get('dpo/updateDPOstatus', [RegisterController::class, 'bulkConfirmDPOTransaction']);
 
 
 Route::post('dpo/callback', [RegisterController::class, 'dpoCallback']);

@@ -281,10 +281,13 @@ class RegisterController extends Controller
             }
         }
 
-        return response()->json([
-            "newly_paid"=> $count,
-            "not_paid_yet"=>$failed
-        ]);
+        return redirect()->back()->with('success', 'Newly Paid DPO tickets: '.$count. ' Not yet paid: '. $failed);
+        
+
+        // return response()->json([
+        //     "newly_paid"=> $count,
+        //     "not_paid_yet"=>$failed
+        // ]);
     }
 
     public function DPOCallback(Request $request){

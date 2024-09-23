@@ -84,9 +84,9 @@
                             <div class="row">
                                 @foreach($event->tickets as $ticket)
                                 <input type="hidden" name="currency" value="{{ $ticket->currency }}">
-                                <!-- <input type="hidden" name="price" value="{{ $ticket->price }}"> -->
+                                <input type="hidden" name="price" value="{{ $ticket->price }}">
 
-                                <input type="hidden" name="price" value="1">
+                                <!-- <input type="hidden" name="price" value="1"> -->
                                 <input type="hidden" name="qty" value="1">
                                     <div class="col-md-6 col-lg-6 col-sm-12">
                                     

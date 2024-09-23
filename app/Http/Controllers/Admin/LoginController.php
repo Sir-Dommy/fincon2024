@@ -61,7 +61,7 @@ class LoginController extends Controller
      */
     private function validator(Request $request)
     {
-        //validation rules.
+        //validation rules. 
         $rules = [
             'email'    => 'required|email|exists:admins|min:5|max:191',
             'password' => 'required|string|min:4|max:255',

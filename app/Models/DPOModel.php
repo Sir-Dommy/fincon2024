@@ -14,11 +14,11 @@ class DPOModel extends Model
             <CompanyToken>'.env('DPO_COMPANY_TOKEN', null).'</CompanyToken>
             <Request>createToken</Request>
             <Transaction>
-                <PaymentAmount>1</PaymentAmount>
+                <PaymentAmount>'. $amount .'</PaymentAmount>
                 <PaymentCurrency>USD</PaymentCurrency>
                 <CompanyRef>'.env('DPO_COMPANY_REF', null).'</CompanyRef>
-                <RedirectURL>http://www.domain.com/payurl.php</RedirectURL>
-                <BackURL>http://www.domain.com/backurl.php</BackURL>
+                <RedirectURL>'.env('DPO_REDIRECT_URL', null).'</RedirectURL>
+                <BackURL>'.env('DPO_BACK_URL', null).'</BackURL>
                 <CompanyRefUnique>0</CompanyRefUnique>
                 <PTL>5</PTL>
             </Transaction>

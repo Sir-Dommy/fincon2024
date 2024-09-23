@@ -8,16 +8,23 @@
             <div class="card card-default">
                 <div class="card-header d-flex justify-content-between">
                     <h4>Ticket Orders</h4>
-                  
-                    <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
-                        Filter Orders
-                        </button>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="{{ url('backoffice/delegates/complete') }}">Paid</a>
-                            <a class="dropdown-item" href="{{ url('backoffice/delegates/pending') }}">Not Paid</a>
+
+                    <div class="row">
+                        <div>
+                            <a class="btn btn-success" href="{{ url('dpo/updateDPOstatus') }}">Reload Ticket Payments</a>
+                        </div>
+                        <div class="dropdown mx-2">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                            Filter Orders
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{{ url('backoffice/delegates/complete') }}">Paid</a>
+                                <a class="dropdown-item" href="{{ url('backoffice/delegates/pending') }}">Not Paid</a>
+                            </div>
                         </div>
                     </div>
+                  
+                    
                 </div>
                 <div class="card-body">
                     @include('shared.notifications')
