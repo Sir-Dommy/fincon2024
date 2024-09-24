@@ -227,6 +227,8 @@ class RegisterController extends Controller
         }
 
         DPOModel::sirLogging("WE ARE UNABLE TO GENERATE PAYMENT TOKEN");
+        // clearing user details
+        
         return redirect()->back()->with('error', 'We are unable to generate payment token at the moment please retry');
         
     }
