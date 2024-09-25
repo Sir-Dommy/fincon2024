@@ -61,3 +61,15 @@ RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
   AddHandler application/x-httpd-ea-php72 .php .php7 .phtml
 </IfModule>
 # php -- END cPanel-generated handler, do not edit
+
+
+## send request back to the WildFly server ##
+    location / {
+    proxy_pass  http://localhost:8081/fincon-sym/;
+
+        proxy_redirect off;
+        proxy_buffering off;
+        proxy_set_header        Host             $host;
+        proxy_set_header        X-Real-IP       $remote_addr;
+        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+  }

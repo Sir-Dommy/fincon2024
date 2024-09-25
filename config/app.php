@@ -229,4 +229,11 @@ return [
 
     ],
 
+    // DPO DETAILS
+    'DPO_COMPANY_TOKEN'=> 'AA269881-57AC-4DF7-BED0-4E109981FB3C',
+    'DPO_COMPANY_REF'=>'33856',
+    'DPO_SERVICE_TYPE'=>'93017',
+    'DPO_REDIRECT_URL'=>"",
+    'DPO_BACK_URL'=> ""
+
 ];

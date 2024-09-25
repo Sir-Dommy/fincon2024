@@ -11,21 +11,21 @@ class DPOModel extends Model
     public static function createPaymentToken($amount){
         $xml_data = '<?xml version="1.0" encoding="utf-8"?>
             <API3G>
-            <CompanyToken>'.env('DPO_COMPANY_TOKEN', null).'</CompanyToken>
+            <CompanyToken>'.config('app.DPO_COMPANY_TOKEN').'</CompanyToken>
             <Request>createToken</Request>
             <Transaction>
                 <PaymentAmount>'. $amount .'</PaymentAmount>
                 <PaymentCurrency>USD</PaymentCurrency>
-                <CompanyRef>'.env('DPO_COMPANY_REF', null).'</CompanyRef>
-                <RedirectURL>'.env('DPO_REDIRECT_URL', null).'</RedirectURL>
-                <BackURL>'.env('DPO_BACK_URL', null).'</BackURL>
+                <CompanyRef>'.config('app.DPO_COMPANY_REF').'</CompanyRef>
+                <RedirectURL>'.config('app.DPO_REDIRECT_URL').'</RedirectURL>
+                <BackURL>'.config('app.DPO_BACK_URL').'</BackURL>
                 <CompanyRefUnique>0</CompanyRefUnique>
                 <PTL>5</PTL>
             </Transaction>
             <Services>
                 <Service>
-                <ServiceType>'.env('DPO_SERVICE_TYPE', null).'</ServiceType>
-                <ServiceDescription>Flight from Nairobi to Diani</ServiceDescription>
+                <ServiceType>'.config('app.DPO_SERVICE_TYPE').'</ServiceType>
+                <ServiceDescription>Fincon Event</ServiceDescription>
                 <ServiceDate>2013/12/20 19:00</ServiceDate>
                 </Service>
             </Services>
@@ -51,7 +51,7 @@ class DPOModel extends Model
     public static function verifyPaymentToken($payment_token){
         $xml_data = '<?xml version="1.0" encoding="utf-8"?>
             <API3G>
-            <CompanyToken>'.env('DPO_COMPANY_TOKEN', null).'</CompanyToken>
+            <CompanyToken>'.config('app.DPO_COMPANY_TOKEN').'</CompanyToken>
             <Request>verifyToken</Request>
             <TransactionToken>'. $payment_token .'</TransactionToken>
             </API3G>
